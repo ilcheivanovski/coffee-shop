@@ -2,14 +2,15 @@ import React, { lazy } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import './App.css';
 
-const CoffeeTypes = lazy(() => import('./components/pages/CoffeeTypes'));
+const CoffeeShopPage = lazy(() => import('./components/pages/CoffeeShopPage'));
 
-const App = () =>
+const App = () => (
   <Router>
     <Routes>
-      <Route path='/' element={<Navigate to='/coffee-types' replace={true} />} />
-      <Route path='/coffee-types' element={<CoffeeTypes />} />
+      <Route path='/' element={<Navigate to='/coffee-shop' replace={true} />} />
+      <Route path='/coffee-types' element={<CoffeeShopPage />} />
     </Routes>
   </Router>
+);
 
 export default App;

@@ -1,37 +1,6 @@
 import { createTheme } from '@mui/material';
 
-// Update the Buttons's variant prop options
-declare module '@mui/system/createTheme/createBreakpoints' {
-  interface BreakpointOverrides {
-    mobile: true;
-    tablet: true;
-    laptop: true;
-    desktop: true;
-  }
-}
-
 const theme = createTheme({
-  breakpoints: {
-    values: {
-      mobile: 0,
-      xs: 0,
-      tablet: 600,
-      sm: 600,
-      md: 900,
-      lg: 1200,
-      laptop: 1281,
-      xl: 1536,
-      desktop: 1536
-    }
-  },
-  palette: {
-    primary: {
-      main: '#186DB1'
-    },
-    secondary: {
-      main: '#793DB5'
-    },
-  },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -39,7 +8,7 @@ const theme = createTheme({
           textTransform: 'none',
           height: '42px'
         }
-      },
+      }
     },
     MuiFormControl: {
       styleOverrides: {
@@ -101,9 +70,8 @@ const theme = createTheme({
           }
         }
       ]
-    },
-  },
+    }
+  }
 });
-
 
 export default theme;

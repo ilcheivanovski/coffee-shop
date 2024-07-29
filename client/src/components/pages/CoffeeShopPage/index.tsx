@@ -1,16 +1,17 @@
 import React, { useCallback, useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
-import { DataGrid, GridColDef, GridToolbarContainer } from '@mui/x-data-grid';
+import { useQuery } from '@apollo/client';
+import { DataGrid, GridCallbackDetails, GridColDef, GridRowParams, GridToolbarContainer, MuiEvent } from '@mui/x-data-grid';
 import { Box, Button, IconButton, Stack } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import Snackbar from '@mui/material/Snackbar';
 
 import ALL_COFFEES_QUERY from '../../../graphql/queries/allCoffees';
 import { Header } from '../../layout';
 import { ICoffee } from '../../../interfaces/Coffee';
 import CreateDialog from './dialogs/CreateUpdateDialog';
 import { Spinner } from '../../common';
-import DELETE_COFFEE_MUTATION from '../../../graphql/mutations/deleteCoffee';
+import DeleteDialog from './dialogs/DeleteDialog';
 
 interface CoffeePageProps {}
 interface FetchData {
@@ -20,22 +21,10 @@ interface FetchData {
 const CoffeePage: React.FC<CoffeePageProps> = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [editableCoffee, setEditableCoffee] = useState<ICoffee | undefined>(undefined);
+  const [deleteId, setDeleteId] = useState<number | undefined>(undefined);
+  const [snackbarCoffee, setSnackbarCoffee] = useState<ICoffee | null>(null);
 
   const { loading, data } = useQuery<FetchData>(ALL_COFFEES_QUERY);
-  const [deleteCoffeeMutation] = useMutation(DELETE_COFFEE_MUTATION, {
-    update(cache, { data: { deleteCoffee } }) {
-      const data: any = cache.readQuery({
-        query: ALL_COFFEES_QUERY
-      });
-      console.log({ data, deleteCoffee });
-      cache.writeQuery({
-        query: ALL_COFFEES_QUERY,
-        data: {
-          allCoffeTypes: data.allCoffeTypes.filter((c: ICoffee) => c.id !== deleteCoffee)
-        }
-      });
-    }
-  });
   const coffeeTypes = data?.allCoffeTypes;
 
   const onEditClick = useCallback(
@@ -46,21 +35,6 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
     [setDialogOpen]
   );
 
-  const onDeleteClick = useCallback(
-    async (id: number) => {
-      try {
-        await deleteCoffeeMutation({
-          variables: {
-            id
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [deleteCoffeeMutation]
-  );
-
   const onCreateButtonClick = useCallback(() => {
     setDialogOpen(true);
   }, [setDialogOpen]);
@@ -69,6 +43,23 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
     setEditableCoffee(undefined);
     setDialogOpen(false);
   }, [setDialogOpen]);
+
+  const onDeleteCloseClick = useCallback(() => {
+    setDeleteId(undefined);
+  }, [setDeleteId]);
+
+  // we are simulating order we do not save anything in db
+  // but if we had one than we would have one to one relation
+  const onRowClickHandler = useCallback(
+    (params: GridRowParams, event: MuiEvent<React.MouseEvent<HTMLElement>>, details: GridCallbackDetails) => {
+      setSnackbarCoffee(params.row);
+    },
+    []
+  );
+
+  const onSnackbarClose = useCallback(() => {
+    setSnackbarCoffee(null);
+  }, [setSnackbarCoffee]);
 
   if (loading) return <Spinner />;
 
@@ -104,7 +95,7 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
           </IconButton>
           <IconButton
             onClick={() => {
-              onDeleteClick(+params.id);
+              setDeleteId(+params.id);
             }}
             aria-label='delete'
           >
@@ -115,19 +106,24 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
     }
   ];
 
-  const CustomToolbar = () => (
-    <GridToolbarContainer>
-      <Box sx={{ flexGrow: 1 }} />
-      <Button onClick={onCreateButtonClick} sx={{ alignSelf: 'end' }}>
-        + Create Coffee
-      </Button>
-    </GridToolbarContainer>
-  );
-
   return (
     <Stack width={'100%'}>
       <Header />
       <Stack alignItems={'center'} justifyContent={'center'} pt={'50px'}>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          open={!!snackbarCoffee}
+          message={`You successfully ordered ${snackbarCoffee?.name} with: ${
+            !!snackbarCoffee?.ingredients?.length
+              ? snackbarCoffee.ingredients?.length > 1
+                ? snackbarCoffee.ingredients.map((i: any) => `${i.size}ml ${i.name}`).join(', ')
+                : snackbarCoffee.ingredients.map((i: any) => `${i.size}ml ${i.name}`)
+              : '-'
+          }`}
+          key={'topcenter'}
+          onClose={onSnackbarClose}
+          autoHideDuration={3000}
+        />
         <DataGrid
           rows={coffeeTypes}
           columns={columns}
@@ -141,13 +137,27 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
               }
             }
           }}
+          onRowClick={onRowClickHandler}
           slots={{
-            toolbar: CustomToolbar
+            toolbar: () => (
+              <GridToolbarContainer>
+                <Box sx={{ flexGrow: 1 }} />
+                <Button onClick={onCreateButtonClick} sx={{ alignSelf: 'end' }}>
+                  + Create Coffee
+                </Button>
+              </GridToolbarContainer>
+            )
+          }}
+          sx={{
+            '.MuiDataGrid-row': {
+              cursor: 'pointer'
+            }
           }}
         />
       </Stack>
 
       {dialogOpen && <CreateDialog coffeeModel={editableCoffee} onClose={onCloseClick} />}
+      {deleteId && <DeleteDialog id={deleteId} onClose={onDeleteCloseClick} />}
     </Stack>
   );
 };

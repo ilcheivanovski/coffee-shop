@@ -72,20 +72,28 @@ const CreateUpdateDialog: React.FC<CreateUpdateDialogProps> = ({ coffeeModel, on
         onSubmit={async (values) => {
           try {
             if (isEditMode) {
-              await updateCoffeeMutation({
-                variables: {
-                  id: coffeeModel ? Number(coffeeModel.id) : undefined,
-                  name: values.name,
-                  ingredients: values.ingredients.map((i) => ({ ...i, size: +i.size }))
-                }
-              });
+              try {
+                await updateCoffeeMutation({
+                  variables: {
+                    id: coffeeModel ? Number(coffeeModel.id) : undefined,
+                    name: values.name,
+                    ingredients: values.ingredients.map((i) => ({ ...i, size: +i.size }))
+                  }
+                });
+              } catch (error) {
+                console.log(error);
+              }
             } else {
-              await createCoffeeMutation({
-                variables: {
-                  name: values.name,
-                  ingredients: values.ingredients.map((i) => ({ ...i, size: +i.size }))
-                }
-              });
+              try {
+                await createCoffeeMutation({
+                  variables: {
+                    name: values.name,
+                    ingredients: values.ingredients.map((i) => ({ ...i, size: +i.size }))
+                  }
+                });
+              } catch (error) {
+                console.log(error);
+              }
             }
             onClose();
           } catch (error) {
