@@ -27,6 +27,7 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
       const data: any = cache.readQuery({
         query: ALL_COFFEES_QUERY
       });
+      console.log({ data, deleteCoffee });
       cache.writeQuery({
         query: ALL_COFFEES_QUERY,
         data: {

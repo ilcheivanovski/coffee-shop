@@ -1,7 +1,7 @@
-import deletePatients from './mutations/deleteCoffee';
-import allPatients from './queries/allCoffees';
+import deleteCoffee from './mutations/deleteCoffee';
+import allCoffee from './queries/allCoffees';
 
 export {
-    deletePatients,
-    allPatients
+    deleteCoffee,
+    allCoffee
 }

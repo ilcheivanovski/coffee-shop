@@ -1,33 +1,40 @@
 {
-  "name": "myapp_server",
-  "author": "Jyoti Puri <jyotipuri@gmail.com>",
-  "version": "0.1.0",
-  "private": true,
+  "name": "coffe-shop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --watch \"./src/**/*\" -e ts --exec \"npx ts-node ./src/index.ts\"",
+    "prod": "tsc && node dist/index.js",
+    "test:resolver": "jest --forceExit --detectOpenHandles --watchAll --maxWorkers=1 ./resolvers/Coffee.resolver.spec.ts",
+    "test:service": "jest --forceExit --detectOpenHandles --watchAll --maxWorkers=1 ./services/Coffee.service.spec.ts",
+    "test:repository": "jest --forceExit --detectOpenHandles --watchAll --maxWorkers=1 ./repos/Coffee.repository.spec.ts"
+  },
+  "keywords": [],
+  "author": "Ilche Ivanovski",
+  "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.10.5",
-    "@apollo/subgraph": "^2.8.3",
-    "@types/express": "^4.17.21",
-    "@types/graphql": "^14.5.0",
-    "apollo-server-express": "^3.13.0",
-    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "fs": "^0.0.1-security",
-    "glob": "^11.0.0",
-    "graphql-tools": "^9.0.1",
-    "merge-graphql-schemas": "^1.7.8",
-    "nodemon": "^3.1.4",
-    "path": "^0.12.7",
+    "express": "^4.18.2",
+    "graphql": "^16.9.0",
+    "graphql-scalars": "^1.23.0",
+    "inversify": "^6.0.1",
+    "inversify-express-utils": "^6.4.3",
     "pg": "^8.12.0",
-    "prettier": "^3.3.3",
-    "sequelize": "^6.37.3"
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.37.3",
+    "ts-node": "^10.9.1",
+    "type-graphql": "^2.0.0-rc.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.15",
+    "@types/jest": "^29.2.4",
+    "jest": "^29.3.1",
+    "jest-mock-extended": "^3.0.1",
+    "nodemon": "^2.0.20",
+    "ts-jest": "^29.0.3",
     "typescript": "^5.5.4"
-  },
-  "scripts": {
-    "prod": "tsc && node dist/index.js",
-    "start": "nodemon --watch \"./src/**/*\" -e ts --exec \"npx ts-node ./src/index.ts\""
   }
 }

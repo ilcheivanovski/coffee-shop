@@ -74,7 +74,7 @@ const CreateUpdateDialog: React.FC<CreateUpdateDialogProps> = ({ coffeeModel, on
             if (isEditMode) {
               await updateCoffeeMutation({
                 variables: {
-                  id: coffeeModel.id,
+                  id: coffeeModel ? Number(coffeeModel.id) : undefined,
                   name: values.name,
                   ingredients: values.ingredients.map((i) => ({ ...i, size: +i.size }))
                 }
