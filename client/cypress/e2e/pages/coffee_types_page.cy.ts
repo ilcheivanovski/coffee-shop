@@ -4,7 +4,7 @@ const baseUrl = Cypress.config('baseUrl');
 
 describe('Coffe types page has all elements', () => {
   beforeEach(() => {
-    cy.visit(`${baseUrl}/coffee-types`);
+    cy.visit(`${baseUrl}/coffee-shop`);
   });
 
   it('Have create button', () => {

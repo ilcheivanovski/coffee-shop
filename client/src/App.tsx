@@ -8,7 +8,7 @@ const App = () => (
   <Router>
     <Routes>
       <Route path='/' element={<Navigate to='/coffee-shop' replace={true} />} />
-      <Route path='/coffee-types' element={<CoffeeShopPage />} />
+      <Route path='/coffee-shop' element={<CoffeeShopPage />} />
     </Routes>
   </Router>
 );
