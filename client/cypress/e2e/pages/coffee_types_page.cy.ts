@@ -14,7 +14,7 @@ describe('Coffe types page has all elements', () => {
   });
 
   it('Should have 4 coffees', () => {
-    cy.get('.MuiDataGrid-row').should('have.length', 4);
+    cy.get('.MuiDataGrid-row').should('have.length', 5);
   });
 
   it('Added one Coffee to the list', () => {
