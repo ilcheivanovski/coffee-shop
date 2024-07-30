@@ -2,9 +2,10 @@ import React from 'react';
 import { Field, FieldArray, Form, Formik } from 'formik';
 import { LoadingButton } from '@mui/lab';
 import { useMutation } from '@apollo/client';
-import { Box, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
+import { Box, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import * as Yup from 'yup';
 
 import CustomDialog from '../../../../common/Dialog';
 import { ICoffee } from '../../../../../interfaces/Coffee';
@@ -16,6 +17,18 @@ interface CreateUpdateDialogProps {
   coffeeModel?: ICoffee;
   onClose: () => void;
 }
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required('Required'),
+  ingredients: Yup.array()
+    .of(
+      Yup.object().shape({
+        name: Yup.string().ensure().required('Name is required'),
+        size: Yup.number().required('Age is required')
+      })
+    )
+    .required('Go out! Make your life enjoyable!')
+});
 
 const CreateUpdateDialog: React.FC<CreateUpdateDialogProps> = ({ coffeeModel, onClose }) => {
   const [createCoffeeMutation, { loading }] = useMutation(CREATE_COFFEE_MUTATION, {
@@ -69,6 +82,7 @@ const CreateUpdateDialog: React.FC<CreateUpdateDialogProps> = ({ coffeeModel, on
             })) || [{ name: '', size: null }]
           } as ICoffee
         }
+        validationSchema={validationSchema}
         onSubmit={async (values) => {
           try {
             if (isEditMode) {
@@ -101,9 +115,10 @@ const CreateUpdateDialog: React.FC<CreateUpdateDialogProps> = ({ coffeeModel, on
           }
         }}
       >
-        {({ values }) => (
+        {({ errors, values }) => (
           <Form>
             <Field as={TextField} name={'name'} label='Coffe name' variant='outlined' fullWidth />
+            <Typography color={'red'}>{errors?.name}</Typography>
             <Typography py={'15px'}>Ingredients</Typography>
             <FieldArray name='ingredients'>
               {({ remove, push }) => (
@@ -119,18 +134,25 @@ const CreateUpdateDialog: React.FC<CreateUpdateDialogProps> = ({ coffeeModel, on
                         }}
                         mb={'14px'}
                       >
-                        <Field as={TextField} name={`ingredients.${index}.name`} label='Name' variant='outlined' fullWidth />
-                        <Field
-                          as={TextField}
-                          name={`ingredients.${index}.size`}
-                          label='Size'
-                          variant='outlined'
-                          fullWidth
-                          type={'number'}
-                          InputProps={{
-                            endAdornment: <InputAdornment position='end'>ml</InputAdornment>
-                          }}
-                        />
+                        <Stack>
+                          <Field as={TextField} name={`ingredients.${index}.name`} label='Name' variant='outlined' fullWidth />
+                          <Typography color={'red'}>{(errors?.ingredients?.[index] as any)?.name}</Typography>
+                        </Stack>
+                        <Stack>
+                          <Field
+                            as={TextField}
+                            name={`ingredients.${index}.size`}
+                            label='Size'
+                            variant='outlined'
+                            fullWidth
+                            type={'number'}
+                            InputProps={{
+                              endAdornment: <InputAdornment position='end'>ml</InputAdornment>
+                            }}
+                          />
+                          <Typography color={'red'}>{(errors?.ingredients?.[index] as any)?.size}</Typography>
+                        </Stack>
+
                         {values.ingredients.length - 1 === index && (
                           <IconButton onClick={() => push({ name: '', size: '' })}>
                             <AddIcon />
