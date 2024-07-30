@@ -41,7 +41,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ id, onClose }) => {
 
   return (
     <CustomDialog open={true} onClose={onClose} title={'Are you sure you want to delete?'}>
-      <LoadingButton loading={loading} onClick={onDeleteClick}>
+      <LoadingButton variant={'contained'} loading={loading} onClick={onDeleteClick}>
         Delete
       </LoadingButton>
     </CustomDialog>
