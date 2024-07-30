@@ -9,8 +9,8 @@ import Snackbar from '@mui/material/Snackbar';
 import ALL_COFFEES_QUERY from '../../../graphql/queries/allCoffees';
 import { Header } from '../../layout';
 import { ICoffee } from '../../../interfaces/Coffee';
-import CreateDialog from './dialogs/CreateUpdateDialog';
 import { Spinner } from '../../common';
+import CreateDialog from './dialogs/CreateUpdateDialog';
 import DeleteDialog from './dialogs/DeleteDialog';
 
 interface CoffeePageProps {}
