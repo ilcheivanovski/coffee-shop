@@ -86,7 +86,8 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
       renderCell: (params) => (
         <Box display={'flex'}>
           <IconButton
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               onEditClick(params.row);
             }}
             aria-label='edit'
@@ -94,7 +95,8 @@ const CoffeePage: React.FC<CoffeePageProps> = () => {
             <EditIcon />
           </IconButton>
           <IconButton
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setDeleteId(+params.id);
             }}
             aria-label='delete'
