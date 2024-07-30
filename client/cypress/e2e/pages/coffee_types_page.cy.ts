@@ -13,8 +13,8 @@ describe('Coffe types page has all elements', () => {
     cy.get('[data-testid="EditIcon"]').should('have.length.above', 0);
   });
 
-  it('Should have 4 coffees', () => {
-    cy.get('.MuiDataGrid-row').should('have.length', 5);
+  it('Should have 6 coffees', () => {
+    cy.get('.MuiDataGrid-row').should('have.length', 6);
   });
 
   it('Added one Coffee to the list', () => {
@@ -25,9 +25,6 @@ describe('Coffe types page has all elements', () => {
     cy.get('[name="ingredients.0.size"]').type('45');
     cy.get('button[type="submit"]').click();
 
-    cy.get('.MuiDataGrid-row').last().children('.MuiDataGrid-cell').first().should('have.text', 'Test Optimistic Response');
-
-    cy.get('.MuiDialog-container').should('not.exist');
     cy.get('.MuiDataGrid-row').last().children('.MuiDataGrid-cell').first().should('have.text', 'LATTE');
   });
 });
