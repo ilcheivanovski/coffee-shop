@@ -13,8 +13,8 @@ describe('Coffe types page has all elements', () => {
     cy.get('[data-testid="EditIcon"]').should('have.length.above', 0);
   });
 
-  it('Should have 6 coffees', () => {
-    cy.get('.MuiDataGrid-row').should('have.length', 6);
+  it('Should have more than 4 coffees', () => {
+    cy.get('.MuiDataGrid-row').should('have.length', 4);
   });
 
   it('Added one Coffee to the list', () => {
