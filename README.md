@@ -1,4 +1,4 @@
-# React Node GraphQL TypeScript - Starter Kit
+# React Node Type GraphQL TypeScript - Starter Kit
 
 As I was bootstraping a webapplication I created this starter kit for my use. The technology stack of this kit is collection of all coolatest technologies which I want to use in my web application.
 
